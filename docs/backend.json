@@ -1,0 +1,132 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "بيانات المستخدم وصلاحياته في النظام والمركز المرتبط به",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["SuperAdmin", "Admin", "Therapist", "Parent"], "description": "دور المستخدم" },
+        "displayName": { "type": "string", "description": "الاسم المعروض" },
+        "email": { "type": "string", "format": "email", "description": "البريد الإلكتروني" },
+        "centerId": { "type": "string", "description": "معرف المركز الذي ينتمي إليه المستخدم" },
+        "linkedEntityId": { "type": "string", "description": "معرف الأخصائي أو الطفل المرتبط بهذا الحساب" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["role", "email", "centerId"]
+    },
+    "Center": {
+      "title": "Center",
+      "description": "بيانات المركز العلاجي وإعدادات الاشتراك",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "اسم المركز" },
+        "plan": { "type": "string", "enum": ["Starter", "Professional", "Enterprise"], "default": "Starter" },
+        "subscriptionStatus": { "type": "string", "enum": ["Trial", "Active", "Expired", "Suspended"], "default": "Trial" },
+        "trialEndDate": { "type": "string", "format": "date-time", "description": "تاريخ انتهاء الفترة التجريبية" },
+        "status": { "type": "string", "enum": ["Active", "Suspended"], "default": "Active" },
+        "logoUrl": { "type": "string", "description": "رابط شعار المركز" },
+        "address": { "type": "string", "description": "عنوان المركز" },
+        "phone": { "type": "string", "description": "رقم الهاتف" },
+        "taxNumber": { "type": "string", "description": "الرقم الضريبي" },
+        "currency": { "type": "string", "default": "ج.م" },
+        "workingHours": { "type": "string", "description": "ساعات العمل" },
+        "sessionDuration": { "type": "number", "description": "مدة الجلسة الافتراضية" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "plan"]
+    },
+    "Child": {
+      "title": "Child",
+      "description": "بيانات الطفل المسجل",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["ذكر", "أنثى"] },
+        "diagnosis": { "type": "string" },
+        "parentName": { "type": "string" },
+        "parentPhone": { "type": "string" },
+        "assignedTherapistId": { "type": "string" },
+        "treatmentPlan": { "type": "string" },
+        "status": { "type": "string", "enum": ["نشط", "قيد الانتظار", "مكتمل"] },
+        "sessionsPurchased": { "type": "number" },
+        "sessionsCompleted": { "type": "number" },
+        "remainingSessions": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "amountPaid": { "type": "number" },
+        "remainingBalance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Therapist": {
+      "title": "Therapist",
+      "description": "بيانات الأخصائي",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "specialization": { "type": "string" },
+        "email": { "type": "string" },
+        "availability": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Session": { "title": "Session", "type": "object", "properties": { "childId": { "type": "string" }, "status": { "type": "string" } } },
+    "Activity": { "title": "Activity", "type": "object", "properties": { "title": { "type": "string" }, "childId": { "type": "string" } } },
+    "Payment": { "title": "Payment", "type": "object", "properties": { "amount": { "type": "number" }, "childId": { "type": "string" } } },
+    "Report": { "title": "Report", "type": "object", "properties": { "childId": { "type": "string" }, "evaluation": { "type": "string" } } },
+    "ActivityLog": {
+      "title": "Activity Log",
+      "description": "سجل العمليات المنفذة في النظام",
+      "type": "object",
+      "properties": {
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "بيانات المستخدمين والأدوار والارتباط بالمركز"
+    },
+    "/centers/{centerId}": {
+      "schema": "Center",
+      "description": "بيانات المركز وخطط الاشتراك"
+    },
+    "/centers/{centerId}/children/{childId}": {
+      "schema": "Child",
+      "description": "بيانات الأطفال التابعين لمركز محدد"
+    },
+    "/centers/{centerId}/therapists/{therapistId}": {
+      "schema": "Therapist",
+      "description": "بيانات الأخصائيين التابعين لمركز محدد"
+    },
+    "/centers/{centerId}/sessions/{sessionId}": {
+      "schema": "Session",
+      "description": "الجلسات المجدولة في المركز"
+    },
+    "/centers/{centerId}/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "الأنشطة العلاجية في المركز"
+    },
+    "/centers/{centerId}/reports/{reportId}": {
+      "schema": "Report",
+      "description": "تقارير الجلسات في المركز"
+    },
+    "/centers/{centerId}/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "سجل المدفوعات في المركز"
+    },
+    "/centers/{centerId}/activityLogs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "سجلات النشاطات الإدارية والعلاجية"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "Professional therapist working with a child in a friendly clinic",
+      "imageUrl": "https://picsum.photos/seed/therapy-hero/1200/800",
+      "imageHint": "child therapy center"
+    },
+    {
+      "id": "feature-dashboard",
+      "description": "Modern medical dashboard interface",
+      "imageUrl": "https://picsum.photos/seed/dashboard-ui/800/600",
+      "imageHint": "medical dashboard ui"
+    },
+    {
+      "id": "feature-parent",
+      "description": "Mother looking at mobile app with child",
+      "imageUrl": "https://picsum.photos/seed/parent-app/800/600",
+      "imageHint": "parent app usage"
+    },
+    {
+      "id": "feature-reports",
+      "description": "Growth charts and medical reports",
+      "imageUrl": "https://picsum.photos/seed/reports-ui/800/600",
+      "imageHint": "medical data analytics"
+    }
+  ]
+}
